@@ -15,7 +15,9 @@ mylist=mylist+[[11.0,1]]
 mylist.sort(reverse=True)
 
 print(mylist)
-
+print(mylist[1])
+print(mylist[1][1])
+print(len(mylist))
 # Get user input  
 print('Enter output voltage as a decimal of the input voltage:')
 nx =float(input())
@@ -31,26 +33,26 @@ with open('rs.csv', 'r') as file:
     i=0
     res=array('f',[0.0])
     synres=array('f',[0.0])
+    rvals=[[0,0,0,0]]
     #Build res[] from values in csv
     for each_row in reader:
-        res[i]=float(each_row[0])
-        res.extend([float(each_row[0])])
-        print(res[i], i)
+        rvals=rvals+[[float(each_row[0]),1,0,0]]
+        print(rvals[1+i][0], i)
         i=i+1
 
 file.close()
-sorted(res)
-res.append
-res.pop(i)
+rvals.pop(0)
+
     
-k=0
+
 #Build array of all permitations of parallel combinations
-for i in range(len(res)):
-    for j in range(len(res)):
-        synres[k]=llres(res[i], res[j])
-        synres.extend([synres[k]])
-        k=k+1
-        print(synres[k], k)
+k=len(rvals)-1
+for i in range(k):
+    for j in range(k):
+        rvals=rvals+[[llres(rvals[i][0], rvals[j][0]),2,rvals[i][0],rvals[j][0]]]
+        print(rvals[len(rvals)-1][0], j)
+
+rvals.sort(reverse=True)
 
 import math
 
@@ -64,14 +66,14 @@ z1_min=divmin/factor
 for z1_target in range(math.floor(z1_max),math.floor(z1_min),-1):
     z1=0
     temp_str=""
-    for i in range(len(res)):
+    for i in range(len(rvals)):
         if z1 > (0.99 * z1_target):
             break
-        passes= math.floor(z1_target/res[i])-1
+        passes= math.floor(z1_target/rvals[i][0])-1
         if passes >= 0:
             for j in range(passes):
-                z1=z1+res[i]
-                temp_str=temp_str + str(res[i])
+                z1=z1+rvals[i][0]
+                temp_str=temp_str + str(rvals[i][0])
                 temp_str=temp_str + ", "
                 print("j=",j)
     print(temp_str)
