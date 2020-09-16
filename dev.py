@@ -9,7 +9,12 @@ def llres(r1,r2):
     req=r1*r2
     req=req/(r1+r2)
     return req
-    
+mylist=[[9.0,2]]
+mylist=mylist +[[8.0,1]]
+mylist=mylist+[[11.0,1]]
+mylist.sort(reverse=True)
+
+print(mylist)
 
 # Get user input  
 print('Enter output voltage as a decimal of the input voltage:')
@@ -34,7 +39,8 @@ with open('rs.csv', 'r') as file:
         i=i+1
 
 file.close()
-#res.sort()
+sorted(res)
+res.append
 res.pop(i)
     
 k=0
