@@ -67,6 +67,7 @@ print(z1_max, z1_min)
 for div_net in range(math.floor(divmax),math.ceil(divmin),-1):
     nx_actual=0   
     z1=0
+    num_of_r=0
     z1_target=div_net/(1+nx/(1-nx))                  
     temp_str=str(z1_target)+ ", "
     for i in range(len(rvals)):
@@ -81,10 +82,13 @@ for div_net in range(math.floor(divmax),math.ceil(divmin),-1):
             for j in range(passes):
                 if ((z1+rvals[i][0]) < (1.01*z1_target)):
                     z1=z1+rvals[i][0]
-                    temp_str=temp_str + str(rvals[i][0])
+                    if rvals[i][1] == 1:
+                        temp_str=temp_str + str(rvals[i][0])
+                    elif rvals[i][1] == 2:
+                        temp_str=temp_str + str(rvals[i][2]) + ",||, " + str(rvals[i][3])
                     temp_str=temp_str + ", "
-#        print("z1=",z1,"j=",j)
-#    print("final z1=",z1)
+                    num_of_r=num_of_r+rvals[i][1]
+
     #Find z2
     z2_target=z1*(nx/(1-nx))
     temp_str=str(z2_target)+ ", "
@@ -105,9 +109,10 @@ for div_net in range(math.floor(divmax),math.ceil(divmin),-1):
                     elif rvals[i][1] == 2:
                         temp_str=temp_str + str(rvals[i][2]) + ",||, " + str(rvals[i][3])
                     temp_str=temp_str + ", "
+                    num_of_r=num_of_r+rvals[i][1]
         nx_actual=z2/(z2+z1)            
-    temp_str = temp_str + "z1=" + str(z1) +",z2=" +str(z2) +", " + str(nx_actual)
+    temp_str = temp_str + "z1=" + str(z1) +",z2=" +str(z2) +", "
     if (abs(nx_actual-nx) < .005):
-        print(temp_str)
+        print(num_of_r,", ",str(nx_actual),", ", temp_str)
 
 print("hello", len(res))
