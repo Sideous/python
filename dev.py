@@ -10,6 +10,7 @@ def llres(r1,r2):
     req=req/(r1+r2)
     return req
 
+#def ret_as_float(mystr):
 
 # Get user input  
 print('Enter output voltage as a decimal of the input voltage:')
@@ -42,7 +43,16 @@ for line in comp_file:
     if i > 7:
         if len(fields)>2:
             ss=fields[2].split("'")
-            print(fields[0],fields[1],ss[1], ss[1].isdigit())    
+            fields[2]=ss[1]
+            if fields[2][len(fields[2])-1].isdigit():
+                x=float(ss[1])
+            elif fields[2][len(fields[2])-1]=='K':
+                ss=fields[2].split("K")
+                x=float(ss[0])*1000
+            elif fields[2][len(fields[2])-1]=='M':
+                ss=fields[2].split("M")
+                x=float(ss[0])*1000000
+            print(fields[0],fields[1],fields[2], x)
     i+=1
 print(i)    
 rvals.pop(0)
