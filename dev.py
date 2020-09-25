@@ -10,14 +10,7 @@ def llres(r1,r2):
     req=req/(r1+r2)
     return req
 
-#mylist=[[9.0,2]]
-#mylist=mylist +[[8.0,1]]
-#mylist=mylist+[[11.0,1]]
-#mylist.sort(reverse=True)
-#print(mylist)
-#print(mylist[1])
-#print(mylist[1][1])
-#print(len(mylist))
+
 # Get user input  
 print('Enter output voltage as a decimal of the input voltage:')
 nx =float(input())
@@ -41,6 +34,17 @@ with open('rs.csv', 'r') as file:
         i=i+1
 
 file.close()
+
+comp_file = open('SMD_RES_0603.ptf', 'r')
+i=0
+for line in comp_file:
+    fields = line.split(" | ")
+    if i > 7:
+        if len(fields)>2:
+            ss=fields[2].split("'")
+            print(fields[0],fields[1],ss[1], ss[1].isdigit())    
+    i+=1
+print(i)    
 rvals.pop(0)
 
     
