@@ -69,7 +69,7 @@ for div_net in range(math.floor(divmax),math.ceil(divmin),-1):
     z1=0
     num_of_r=0
     z1_target=div_net/(1+nx/(1-nx))                  
-    temp_str=str(z1_target)+ ", "
+    temp_str="{:.2f}, ".format(z1_target) 
     for i in range(len(rvals)):
         if z1 > (0.99 * z1_target):
             break
@@ -77,7 +77,6 @@ for div_net in range(math.floor(divmax),math.ceil(divmin),-1):
             passes= math.floor(z1_target/rvals[i][0])
         else :
             passes=1
-#        print("passes=", passes)
         if passes >= 1:
             for j in range(passes):
                 if ((z1+rvals[i][0]) < (1.01*z1_target)):
@@ -91,7 +90,8 @@ for div_net in range(math.floor(divmax),math.ceil(divmin),-1):
 
     #Find z2
     z2_target=z1*(nx/(1-nx))
-    temp_str=str(z2_target)+ ", "
+#    temp_str=temp_str+str(z2_target)+ ", "
+    temp_str=temp_str+"{:.3f}, ".format(z2_target)
     z2=0
     for i in range(len(rvals)):
         if z2 > (0.99 * z2_target):
@@ -111,8 +111,77 @@ for div_net in range(math.floor(divmax),math.ceil(divmin),-1):
                     temp_str=temp_str + ", "
                     num_of_r=num_of_r+rvals[i][1]
         nx_actual=z2/(z2+z1)            
-    temp_str = temp_str + "z1=" + str(z1) +",z2=" +str(z2) +", "
+    temp_str = temp_str + "z1={:.3f}, z2={:.3f}, ".format(z1,z2)
     if (abs(nx_actual-nx) < .005):
-        print(num_of_r,", ",str(nx_actual),", ", temp_str)
+        print(num_of_r,", {:0.3f}, ".format(nx_actual), temp_str)        
+#################################
+    temp_str="{:.2f}, ".format(z1_target)
+    z1=0
+    z2=0
+    bestfit_index=-1
+    bestfit_delta=1000000
+    decimal=z1_target-math.floor(z1_target)
+    for i in range(len(rvals)):
+        rvals_dec=rvals[1][0]-math.floor(rvals[i][0])
+        if (((decimal-rvals_dec) > 0) and ((decimal-rvals_dec) < bestfit_delta)):
+            bestfit_delta=decimal-rvals_dec
+            bestfit_index=i
+    if bestfit_index >= 0: 
+        z1=rvals[i][0]
+        temp_str=temp_str + "{:0.2f},".format(rvals[i][0])
+    for i in range(len(rvals)):
+        if z1 > (1.001*z1_target):
+            break
+        elif rvals[i][1] == 1:
+            passes= math.floor(z1_target/rvals[i][0])
+        else :
+            passes=1
+        if passes >= 1:
+            for j in range(passes):
+                if ((z1+rvals[i][0]) < (1.001*z1_target)):
+                    z1=z1+rvals[i][0]
+                    if rvals[i][1] == 1:
+                        temp_str=temp_str + "{:0.2f},".format(rvals[i][0])
+                    elif rvals[i][1] == 2:
+                        temp_str=temp_str + "{:0.2f},||, {:0.2f}".format(rvals[i][2],rvals[i][3])
+                    temp_str=temp_str + ", "
+                    num_of_r=num_of_r+rvals[i][1]
 
+    #Find z2
+    z2_target=z1*(nx/(1-nx))
+    temp_str=temp_str+"{:.2f}, ".format(z2_target)
+    bestfit_index=-1
+    bestfit_delta=1000000
+    decimal=z2_target-math.floor(z2_target)
+    for i in range(len(rvals)):
+        rvals_dec=rvals[1][0]-math.floor(rvals[i][0])
+        if (((decimal-rvals_dec) > 0) and ((decimal-rvals_dec) < bestfit_delta)):
+            bestfit_delta=decimal-rvals_dec
+            bestfit_index=i
+    if bestfit_index >= 0: 
+        z2=rvals[i][0]
+        temp_str=temp_str + "{:0.2f},".format(rvals[i][0])
+    for i in range(len(rvals)):
+        if z2 > (1.001 * z2_target):
+            break
+        elif rvals[i][1] == 1:
+            passes= math.floor(z2_target/rvals[i][0])
+        else :
+            passes=1
+        if passes >= 1:
+            for j in range(passes):
+                if ((z2+rvals[i][0]) < (1.01*z2_target)):
+                    z2=z2+rvals[i][0]
+                    if rvals[i][1] == 1:
+                        temp_str=temp_str + "{:0.2f},".format(rvals[i][0])
+                    elif rvals[i][1] == 2:
+                        temp_str=temp_str + "{:0.2f},||, {:0.2f}".format(rvals[i][2],rvals[i][3])
+                    temp_str=temp_str + ", "
+                    num_of_r=num_of_r+rvals[i][1]
+        nx_actual=z2/(z2+z1)            
+    temp_str = temp_str + "z1={:.3f}, z2={:.3f}, ".format(z1,z2)
+    if (abs(nx_actual-nx) < .005):
+        print(num_of_r,", {:0.3f}, ".format(nx_actual), temp_str)        
+
+#################################
 print("hello", len(res))
