@@ -10,7 +10,19 @@ def llres(r1,r2):
     req=req/(r1+r2)
     return req
 
-#def ret_as_float(mystr):
+def ret_as_float(mystr):
+    xx=0.0
+    ss=mystr.split("'")
+    mystr=ss[1]
+    if mystr[len(mystr)-1].isdigit():
+        xx=float(mystr)
+    elif mystr[len(mystr)-1]=='K':
+        ss=mystr.split("K")
+        xx=float(ss[0])*1000
+    elif mystr[len(mystr)-1]=='M':
+        ss=mystr.split("M")
+        xx=float(ss[0])*1000000
+    return xx
 
 # Get user input  
 print('Enter output voltage as a decimal of the input voltage:')
@@ -39,19 +51,10 @@ file.close()
 comp_file = open('SMD_RES_0603.ptf', 'r')
 i=0
 for line in comp_file:
-    fields = line.split(" | ")
+    fields = line.split(" |")
     if i > 7:
         if len(fields)>2:
-            ss=fields[2].split("'")
-            fields[2]=ss[1]
-            if fields[2][len(fields[2])-1].isdigit():
-                x=float(ss[1])
-            elif fields[2][len(fields[2])-1]=='K':
-                ss=fields[2].split("K")
-                x=float(ss[0])*1000
-            elif fields[2][len(fields[2])-1]=='M':
-                ss=fields[2].split("M")
-                x=float(ss[0])*1000000
+            x=ret_as_float(fields[2])
             print(fields[0],fields[1],fields[2], x)
     i+=1
 print(i)    
