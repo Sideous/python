@@ -11,8 +11,10 @@ def llres(r1,r2):
     return req
 
 def ret_as_float(mystr):
-    xx=0.0
+    xx=-10.0
     ss=mystr.split("'")
+    if len(ss) < 2:
+        return xx
     mystr=ss[1]
     if mystr[len(mystr)-1].isdigit():
         xx=float(mystr)
@@ -22,6 +24,9 @@ def ret_as_float(mystr):
     elif mystr[len(mystr)-1]=='M':
         ss=mystr.split("M")
         xx=float(ss[0])*1000000
+    elif mystr[len(mystr)-1]=='%':
+        ss=mystr.split("%")
+        xx=float(ss[0])
     return xx
 
 # Get user input  
@@ -32,6 +37,11 @@ print ('Enter max value of divider:')
 divmax=float(input())
 print ('Enter min value of divider:')
 divmin=float(input())
+#print ('Enter precision needed (0.1%, 1.0% 5.0%):')
+#s1=input()
+#ss=s1.split("%")
+#precis=float(s1[1])
+
 
 # Build arrays
 with open('rs.csv', 'r') as file:
@@ -53,9 +63,16 @@ i=0
 for line in comp_file:
     fields = line.split(" |")
     if i > 7:
-        if len(fields)>2:
-            x=ret_as_float(fields[2])
-            print(fields[0],fields[1],fields[2], x)
+        if (len(fields)>2):
+            st2=fields[8].split("'")
+            if st2[1]=='ACTIVE':
+                x=ret_as_float(fields[2])
+                st2=fields[11].split("| '")
+                if len(st2) > 1:
+                    print(fields[0],fields[1],fields[2], x, ret_as_float(fields[5]),fields[8], st2[1])
+                else:
+                    print(fields[0],fields[1],fields[2], x, ret_as_float(fields[5]), fields[8])
+#fields[8]=Active,
     i+=1
 print(i)    
 rvals.pop(0)
