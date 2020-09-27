@@ -15,7 +15,7 @@ def ret_as_float(mystr):
     ss=mystr.split("'")
     if len(ss) < 2:
         return xx
-    mystr=ss[1]
+    mystr=ss[1].upper()
     if mystr[len(mystr)-1].isdigit():
         xx=float(mystr)
     elif mystr[len(mystr)-1]=='K':
@@ -35,8 +35,10 @@ nx =float(input())
 #print ('Output =', nx, ' * input votage')
 print ('Enter max value of divider:')
 divmax=float(input())
+#divmax=ret_as_float(input())
 print ('Enter min value of divider:')
 divmin=float(input())
+#divmin=ret_as_float(input())
 #print ('Enter precision needed (0.1%, 1.0% 5.0%):')
 #s1=input()
 #ss=s1.split("%")
@@ -49,12 +51,12 @@ with open('rs.csv', 'r') as file:
     i=0
     res=array('f',[0.0])
     synres=array('f',[0.0])
-    rvals=[[0,0,0,0]]
+    rvals=[[0,0,0,0," "," "]]
     #Build res[] from values in csv
-    for each_row in reader:
-        rvals=rvals+[[float(each_row[0]),1,0,0]]
-        print(rvals[1+i][0], i)
-        i=i+1
+ #   for each_row in reader:
+ #       rvals=rvals+[[float(each_row[0]),1,0,0]]
+ #       print(rvals[1+i][0], i)
+ #       i=i+1
 
 file.close()
 
@@ -68,24 +70,25 @@ for line in comp_file:
             if st2[1]=='ACTIVE':
                 x=ret_as_float(fields[2])
                 st2=fields[11].split("| '")
-                if len(st2) > 1:
-                    print(fields[0],fields[1],fields[2], x, ret_as_float(fields[5]),fields[8], st2[1])
-                else:
-                    print(fields[0],fields[1],fields[2], x, ret_as_float(fields[5]), fields[8])
-#fields[8]=Active,
+ #               rvals=rvals+[[x,1,0,0,st2[1]," "]]
+                rvals=rvals+[[x,1,0,0," "," "]]
+ #               if len(st2) > 1:
+ #                   print(fields[0],fields[1],fields[2], x, ret_as_float(fields[5]),fields[8], st2[1])
+ #               else:
+ #                   print(fields[0],fields[1],fields[2], x, ret_as_float(fields[5]), fields[8])
     i+=1
 print(i)    
 rvals.pop(0)
 
     
-
+"""
 #Build array of all permitations of parallel combinations
 k=len(rvals)-1
 for i in range(k):
     for j in range(i,k):
-        rvals=rvals+[[llres(rvals[i][0], rvals[j][0]),2,rvals[i][0],rvals[j][0]]]
-        print(rvals[len(rvals)-1][0], j)
-
+        rvals=rvals+[[llres(rvals[i][0], rvals[j][0]),2,rvals[i][0],rvals[j][0]," "," "]]
+        print(rvals[len(rvals)-1][0], j, i)
+"""
 rvals.sort(reverse=True)
 xx=0
 
@@ -97,8 +100,8 @@ z1_max=divmax/factor
 z1_min=divmin/factor
 
 print(z1_max, z1_min)
-
-for div_net in range(math.floor(divmax),math.ceil(divmin),-1):
+print(divmax,divmin)
+for div_net in range(math.floor(divmax),math.ceil(divmin),-10):
     nx_actual=0   
     z1=0
     num_of_r=0
@@ -124,7 +127,6 @@ for div_net in range(math.floor(divmax),math.ceil(divmin),-1):
 
     #Find z2
     z2_target=z1*(nx/(1-nx))
-#    temp_str=temp_str+str(z2_target)+ ", "
     temp_str=temp_str+"{:.3f}, ".format(z2_target)
     z2=0
     for i in range(len(rvals)):
@@ -146,7 +148,7 @@ for div_net in range(math.floor(divmax),math.ceil(divmin),-1):
                     num_of_r=num_of_r+rvals[i][1]
         nx_actual=z2/(z2+z1)            
     temp_str = temp_str + "z1={:.3f}, z2={:.3f}, ".format(z1,z2)
-    if (abs(nx_actual-nx) < .005):
+    if (abs(nx_actual-nx) < (.025*nx)) and num_of_r <4:
         print(num_of_r,", {:0.3f}, ".format(nx_actual), temp_str)        
 #################################
     temp_str="{:.2f}, ".format(z1_target)
@@ -214,8 +216,9 @@ for div_net in range(math.floor(divmax),math.ceil(divmin),-1):
                     num_of_r=num_of_r+rvals[i][1]
         nx_actual=z2/(z2+z1)            
     temp_str = temp_str + "z1={:.3f}, z2={:.3f}, ".format(z1,z2)
-    if (abs(nx_actual-nx) < .005):
+    if (abs(nx_actual-nx) < (.025*nx)) and num_of_r <4:
         print(num_of_r,", {:0.3f}, ".format(nx_actual), temp_str)        
 
 #################################
 print("hello", len(res))
+
