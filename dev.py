@@ -101,6 +101,7 @@ z1_min=divmin/factor
 
 print(z1_max, z1_min)
 print(divmax,divmin)
+last_z1=0
 for div_net in range(math.floor(divmax),math.ceil(divmin),-10):
     nx_actual=0   
     z1=0
@@ -124,32 +125,34 @@ for div_net in range(math.floor(divmax),math.ceil(divmin),-10):
                         temp_str=temp_str + str(rvals[i][2]) + ",||, " + str(rvals[i][3])
                     temp_str=temp_str + ", "
                     num_of_r=num_of_r+rvals[i][1]
-
+    if (z1 != last_z1) :
+        last_z1=z1
     #Find z2
-    z2_target=z1*(nx/(1-nx))
-    temp_str=temp_str+"{:.3f}, ".format(z2_target)
-    z2=0
-    for i in range(len(rvals)):
-        if z2 > (0.99 * z2_target):
-            break
-        elif rvals[i][1] == 1:
-            passes= math.floor(z2_target/rvals[i][0])
-        else :
-            passes=1
-        if passes >= 1:
-            for j in range(passes):
-                if ((z2+rvals[i][0]) < (1.01*z2_target)):
-                    z2=z2+rvals[i][0]
-                    if rvals[i][1] == 1:
-                        temp_str=temp_str + str(rvals[i][0])
-                    elif rvals[i][1] == 2:
-                        temp_str=temp_str + str(rvals[i][2]) + ",||, " + str(rvals[i][3])
-                    temp_str=temp_str + ", "
-                    num_of_r=num_of_r+rvals[i][1]
-        nx_actual=z2/(z2+z1)            
-    temp_str = temp_str + "z1={:.3f}, z2={:.3f}, ".format(z1,z2)
-    if (abs(nx_actual-nx) < (.025*nx)) and num_of_r <4:
-        print(num_of_r,", {:0.3f}, ".format(nx_actual), temp_str)        
+        z2_target=z1*(nx/(1-nx))
+        temp_str=temp_str+"{:.3f}, ".format(z2_target)
+        z2=0
+        for i in range(len(rvals)):
+            if z2 > (0.99 * z2_target):
+                break
+            elif rvals[i][1] == 1:
+                passes= math.floor(z2_target/rvals[i][0])
+            else :
+                passes=1
+            if passes >= 1:
+                for j in range(passes):
+                    if ((z2+rvals[i][0]) < (1.01*z2_target)):
+                        z2=z2+rvals[i][0]
+                        if rvals[i][1] == 1:
+                            temp_str=temp_str + str(rvals[i][0])
+                        elif rvals[i][1] == 2:
+                            temp_str=temp_str + str(rvals[i][2]) + ",||, " + str(rvals[i][3])
+                        temp_str=temp_str + ", "
+                        num_of_r=num_of_r+rvals[i][1]
+            nx_actual=z2/(z2+z1)            
+        temp_str = temp_str + "z1={:.3f}, z2={:.3f}, ".format(z1,z2)
+        if (abs(nx_actual-nx) < (.025*nx)) and num_of_r <4:
+            print(num_of_r,", {:0.3f}, ".format(nx_actual), temp_str)        
+"""
 #################################
     temp_str="{:.2f}, ".format(z1_target)
     z1=0
@@ -220,5 +223,6 @@ for div_net in range(math.floor(divmax),math.ceil(divmin),-10):
         print(num_of_r,", {:0.3f}, ".format(nx_actual), temp_str)        
 
 #################################
+"""
 print("hello", len(res))
 
